@@ -68,18 +68,16 @@ const creaCard = (personaje) => {
 //<button id="prev" class="btn btn-success btn-lg" data-id="">Anterior</button>
 //<button id="next" class="btn btn-success btn-lg" data-id="">Siguiente</button>
 const creaButtons = () => {
-    const contenedorButtons = document.querySelector('.botones');
-    while(contenedorButtons.firstChild){
-        contenedorButtons.remove(contenedorButtons.firstChild);
-    }
+    const contenedorButtons = document.querySelector('#botones');
+    contenedorButtons.innerText = '';
     const btnPrev = document.createElement('button');
     btnPrev.id = 'prev';
-    btnPrev.className = 'btn btn-success btn-lg';
+    btnPrev.className = 'btn btn-success btn-lg mx-3';
     btnPrev.innerText = 'Anterior';
     contenedorButtons.appendChild(btnPrev);
     const btnNext = document.createElement('button');
     btnNext.id = 'next';
-    btnNext.className = 'btn btn-success btn-lg';
+    btnNext.className = 'btn btn-success btn-lg mx-3';
     btnNext.innerText = 'Siguiente';
     contenedorButtons.appendChild(btnNext);
 }
