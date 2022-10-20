@@ -7,8 +7,8 @@ const loadData = (url, page = 1) => {
     .then(respJson => {
         const info = respJson.info;
         const personajes = respJson.results;
-        console.log(info.next);
-        console.log(info.prev);
+        //console.log(info.next);
+        //console.log(info.prev);
         //creaButtons();
         if(!info.prev){
             document.querySelector('#prev').classList.add('disabled')
@@ -26,6 +26,30 @@ const loadData = (url, page = 1) => {
         showCharacters(personajes);
     })
 }
+
+
+
+const loadCharacterInfo = (url, id) => {
+    let urlCharacter = `${url}${id}`;
+    console.log(urlCharacter);
+    fetch(urlCharacter)
+        .then(respuesta => respuesta.json())
+        .then(personaje => {
+            //TODO: Implementar Modal con info del personaje
+            console.log(personaje);
+            alert(personaje.name);
+        });
+}
+
+const showModal = (e) => {
+    e.preventDefault();
+    if(e.target.classList.contains('btn')){
+        let id = e.target.getAttribute('data-id');
+        loadCharacterInfo(urlBase, id);
+    }
+}
+
+document.querySelector('#respuesta').addEventListener('click', showModal);
 
 const navegacion = (e) => {
     e.preventDefault();
@@ -54,28 +78,13 @@ const creaCard = (personaje) => {
     card.style = 'float: left;';
     const html = `
     <div class="card m-2" style="width: 18rem; ">
-        <img src="${personaje.image}" class="card-img-top" alt="...">
+        <img loading="lazy" src="${personaje.image}" class="card-img-top" alt="...">
         <div class="card-body">
         <h5 class="card-title">${personaje.name}</h5>
         <p class="card-text">${personaje.status}</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+        <button class="btn btn-primary btn-block" data-id="${personaje.id}">Ver Más</button>
         </div>
     </div>`;
     card.innerHTML = html;
   return card;
 }
-
-// const creaButtons = () => {
-//     const contenedorButtons = document.querySelector('#botones');
-//     contenedorButtons.innerText = '';
-//     const btnPrev = document.createElement('button');
-//     btnPrev.id = 'prev';
-//     btnPrev.className = 'btn btn-success btn-lg mx-3';
-//     btnPrev.innerText = 'Anterior';
-//     contenedorButtons.appendChild(btnPrev);
-//     const btnNext = document.createElement('button');
-//     btnNext.id = 'next';
-//     btnNext.className = 'btn btn-success btn-lg mx-3';
-//     btnNext.innerText = 'Siguiente';
-//     contenedorButtons.appendChild(btnNext);
-// }
