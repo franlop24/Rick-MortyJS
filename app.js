@@ -32,13 +32,34 @@ const loadData = (url, page = 1) => {
 const loadCharacterInfo = (url, id) => {
     let urlCharacter = `${url}${id}`;
     console.log(urlCharacter);
-    fetch(urlCharacter)
+    const modalContent = document.querySelector('.modal-body');
+    modalContent.removeChild(modalContent.firstChild);
+    modalContent.appendChild(spinner());
+    setTimeout(() => {
+        fetch(urlCharacter)
         .then(respuesta => respuesta.json())
         .then(personaje => {
             //TODO: Implementar Modal con info del personaje
-            console.log(personaje);
-            alert(personaje.name);
+            modalContent.removeChild(modalContent.firstChild);
+            document.querySelector('.modal-title').innerText = personaje.name;
+            modalContent.appendChild(modalBody(personaje));
         });
+    }, 2000);
+}
+
+const modalBody = (personaje) => {
+    const div = document.createElement('div');
+    const origen = personaje.origin.name;
+    const location = personaje.location.name;
+    const episodes = personaje.episode.length;
+    let html = '';
+    html += origen === 'unknown'? `<h4>Se desconoce su origen</h4>`:
+                        `<h4>Viene de ${origen}</h4>`;
+    html += `<h4>Se encuentra en ${location}</h4>`;
+    html += `<img src="${personaje.image}" class="rounded mx-auto d-block">`;
+    html += `<p>Aparece en ${episodes} episodios</p>`;
+    div.innerHTML = html;
+    return div;
 }
 
 const showModal = (e) => {
@@ -73,6 +94,18 @@ const showCharacters = (personajes) => {
     })
 }
 
+const spinner = () => {
+    const div = document.createElement('div');
+    const html = 
+    `<div class="d-flex justify-content-center">
+        <div class="spinner-border text-info" role="status">
+        <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>`;
+    div.innerHTML = html;
+    return div;
+}
+
 const creaCard = (personaje) => {
     const card = document.createElement('div');
     card.style = 'float: left;';
@@ -82,7 +115,11 @@ const creaCard = (personaje) => {
         <div class="card-body">
         <h5 class="card-title">${personaje.name}</h5>
         <p class="card-text">${personaje.status}</p>
-        <button class="btn btn-primary btn-block" data-id="${personaje.id}">Ver Más</button>
+        <button 
+            class="btn btn-primary btn-block" 
+            data-id="${personaje.id}"
+            data-bs-toggle="modal" 
+            data-bs-target="#exampleModal">Ver Más</button>
         </div>
     </div>`;
     card.innerHTML = html;
